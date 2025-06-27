@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purge Bot - Telegram Bot Yönetim Paneli</title>
+    <meta name="description" content="Telegram Purge Bot'unuzu yönetin ve kontrol edin">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" sizes="any">
+    <link rel="icon" type="image/png" href="/static/favicon.ico" sizes="32x32">
+</head>
+<body class="dark">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-logo" style="display:flex;align-items:center;gap:0.5rem;">
+                    <img src="/static/header_logo.svg" alt="PurgeBot Header Logo" class="navbar-logo" style="height:40px;width:auto;object-fit:contain;display:block;" />
+                </a>
+                <div class="nav-links">
+                    <a href="/" class="btn btn-outline btn-sm btn-header-panel" style="font-weight:500;">
+                        <i class="fas fa-sliders-h"></i>
+                        Bot Kontrol Paneli
+                    </a>
+                    <a href="https://x.com/ibrahimsancar0" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                        <i class="fas fa-external-link-alt"></i>
+                        İletişim
+                    </a>
+                    <a href="/help" class="btn btn-ghost btn-sm">
+                        <i class="fas fa-question-circle"></i>
+                        Yardım
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="content-wrapper">
+            <!-- Bot Status Section -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h2>Bot Durumu ve Kontrol</h2>
+                        <span id="bot-status-badge" class="badge badge-error" style="display:inline-block;">Durduruldu</span>
+                    </div>
+                    <p class="card-description">Bot'u başlatın, durdurun veya yeniden başlatın</p>
+                </div>
+                <div class="card-content">
+                    <div class="button-group">
+                        <button id="start-bot-btn" class="btn btn-primary" onclick="handleBotAction('start')">
+                            <i class="fas fa-play"></i>
+                            <span class="btn-text">Başlat</span>
+                        </button>
+                        <button id="stop-bot-btn" class="btn btn-destructive" onclick="handleBotAction('stop')">
+                            <i class="fas fa-stop"></i>
+                            <span class="btn-text">Durdur</span>
+                        </button>
+                        <button id="restart-bot-btn" class="btn btn-outline" onclick="handleBotAction('restart')">
+                            <i class="fas fa-redo"></i>
+                            <span class="btn-text">Yeniden Başlat</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bot Token Settings -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Bot Token Ayarları</h2>
+                    <p class="card-description">Telegram bot token'ınızı girin ve kaydedin</p>
+                </div>
+                <div class="card-content">
+                    <div class="form-group">
+                        <label for="bot-token-input">Bot Token</label>
+                        <div class="input-group">
+                            <input 
+                                type="password" 
+                                id="bot-token-input" 
+                                class="input" 
+                                placeholder="Bot token'ınızı girin..."
+                            >
+                            <button 
+                                type="button" 
+                                id="toggle-token-visibility" 
+                                class="btn btn-outline"
+                                onclick="toggleTokenVisibility()"
+                            >
+                                <i class="fas fa-eye" id="token-visibility-icon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button id="save-token-btn" class="btn btn-primary" onclick="handleSaveToken()">
+                            <i class="fas fa-save"></i>
+                            <span class="btn-text">Tokeni Kaydet</span>
+                        </button>
+                        <button id="set-commands-btn" class="btn btn-outline" onclick="handleSetCommands()">
+                            <i class="fas fa-terminal"></i>
+                            <span class="btn-text">Kısayolları Ekle</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Messages Deletion -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Servis Mesajları Silme</h2>
+                    <p class="card-description">Otomatik servis mesajları silme özelliğini açın veya kapatın</p>
+                </div>
+                <div class="card-content">
+                    <div class="toggle-group">
+                        <label class="toggle">
+                            <input 
+                                type="checkbox" 
+                                id="delete-service-messages-toggle"
+                                onchange="handleToggleServiceMessages(this.checked)"
+                            >
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span id="service-status-text" class="toggle-label">Kapalı</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        <i class="fas fa-chart-line"></i>
+                        Son İşlemler
+                    </h2>
+                    <p class="card-description">Bot'un son aktiviteleri ve işlemleri</p>
+                    <div class="card-actions">
+                        <button id="refresh-logs-btn" class="btn btn-sm btn-primary" onclick="refreshLogs()">
+                            <i class="fas fa-sync-alt"></i>
+                            Yenile
+                        </button>
+                        <button id="auto-refresh-toggle" class="btn btn-sm btn-outline auto-refresh-active" onclick="toggleAutoRefresh()">
+                            <i class="fas fa-pause"></i>
+                            Otomatik
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="logs-container" id="logs-container">
+                        <div class="logs-loading">
+                            <i class="fas fa-spinner"></i>
+                            Log kayıtları yükleniyor...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 İbrahim Can Sancar tarafından geliştirilmiştir</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="/static/script.js"></script>
+</body>
+</html>
