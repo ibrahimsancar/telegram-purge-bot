@@ -164,4 +164,4 @@ Bu projeyi beğendiyseniz, GitHub'da yıldız vermeyi unutmayın! ⭐
 
 ---
 
-*Son güncelleme: 27 Ocak 2025*
+*Son güncelleme: 27 Haziran 2025*
